@@ -1,22 +1,16 @@
-// Update this with your actual GitHub username, repo name, branch, and path to your JSON files.
-const githubRawBase = 'https://raw.githubusercontent.com/jahanaj098/bountydata/main/';
 const jsonFiles = [
-    'bugcrowd_data.json',
     'hackerone_data.json',
+    'bugcrowd_data.json',
     'intigriti_data.json',
     'yeswehack_data.json'
 ];
 
 let allPrograms = [];
 
-// Load all JSON files from GitHub
 Promise.all(
     jsonFiles.map(file => 
-        fetch(`${githubRawBase}${file}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`Failed to load ${file}`);
-                return response.json();
-            })
+        fetch(file)
+            .then(response => response.json())
             .catch(e => {
                 console.warn(`Failed to load ${file}:`, e);
                 return [];
@@ -45,7 +39,6 @@ function searchPrograms() {
         const programDiv = document.createElement('div');
         programDiv.className = 'program';
 
-        // Display key details; customize fields as needed
         programDiv.innerHTML = `
             <h3>${program.name}</h3>
             <p><strong>Platform:</strong> ${program.handle || 'N/A'}</p>
