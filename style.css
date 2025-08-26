@@ -1,50 +1,95 @@
+/* Global Reset */
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #121212;
   color: #e0e0e0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 2rem 1rem 4rem;
+  line-height: 1.5;
+  min-height: 100vh;
 }
+
 .container {
-  max-width: 900px;
-  margin: auto;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
+
+/* Heading */
 h1 {
-  color: #bb86fc;
+  font-weight: 600;
+  font-size: 2.4rem;
+  color: #f5f5f5;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
+
+/* Search input */
 #searchInput {
   width: 100%;
-  padding: 12px;
-  font-size: 18px;
-  border-radius: 6px;
-  border: none;
-  margin-bottom: 30px;
-  background-color: #222;
-  color: #e0e0e0;
+  padding: 14px 20px;
+  font-size: 1.1rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #1e1e1e;
+  color: #ddd;
+  transition: border-color 0.3s ease;
+  margin-bottom: 2.5rem;
 }
 #searchInput::placeholder {
-  color: #666;
+  color: #888;
 }
+#searchInput:focus {
+  outline: none;
+  border-color: #5a7dff;
+  background-color: #2a2a2a;
+}
+
+/* Program card */
 .program {
   background-color: #1e1e1e;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 14px;
-  box-shadow: 0 0 8px #3700b3;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #2f2f2f;
+  box-shadow: none;
+  transition: border-color 0.2s ease;
 }
+.program:hover {
+  border-color: #5a7dff;
+}
+
+/* Titles */
 .program h3 {
   margin-top: 0;
-  color: #bb86fc;
+  margin-bottom: 1rem;
+  color: #5a7dff;
+  font-weight: 700;
+  font-size: 1.5rem;
 }
+
+/* Text paragraphs */
 .program p {
-  margin: 6px 0;
+  margin: 0.5rem 0;
+  color: #ccc;
+  font-size: 1rem;
+  word-break: break-word;
 }
+
+/* Links */
 .program a {
-  color: #03dac6;
+  color: #7ea0ff;
   text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
-.program a:hover {
+.program a:hover,
+.program a:focus {
+  color: #adc6ff;
   text-decoration: underline;
 }
