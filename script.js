@@ -37,6 +37,20 @@ Promise.all(
   document.getElementById('searchInput').addEventListener('input', searchPrograms);
 });
 
+function getScopeUrls(program) {
+  if (!program.targets || !program.targets.in_scope) return [];
+  const inScope = program.targets.in_scope;
+  
+  return inScope.map(item => 
+    item.asset_identifier ||      // HackerOne typical field
+    item.target ||                // Bugcrowd, YesWeHack typical field
+    item.uri ||                   // Sometimes used
+    item.endpoint ||              // Intigriti typical field
+    (typeof item === 'string' ? item : null)  // fallback in case item is string
+  )
+  .filter(url => typeof url === 'string' && url.length > 0);
+}
+
 function searchPrograms() {
   const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
   const resultsDiv = document.getElementById('results');
@@ -57,13 +71,7 @@ function searchPrograms() {
   }
 
   matches.forEach(program => {
-    // Get all in-scope URLs/domains
-    let scopeUrls = [];
-    if (program.targets && Array.isArray(program.targets.in_scope)) {
-      scopeUrls = program.targets.in_scope
-        .map(t => t.asset_identifier)
-        .filter(Boolean);
-    }
+    const scopeUrls = getScopeUrls(program);
     const pays = program.offers_bounties ? 'Yes' : 'No';
 
     const html = `
