@@ -1,19 +1,32 @@
-const jsonFiles = [
-  'hackerone_data.json',
-  'bugcrowd_data.json',
-  'intigriti_data.json',
-  'yeswehack_data.json',
+const sources = [
+  {
+    name: "HackerOne",
+    url: "https://raw.githubusercontent.com/arkadiyt/bounty-targets-data/main/data/hackerone_data.json"
+  },
+  {
+    name: "Bugcrowd",
+    url: "https://raw.githubusercontent.com/arkadiyt/bounty-targets-data/main/data/bugcrowd_data.json"
+  },
+  {
+    name: "Intigriti",
+    url: "https://raw.githubusercontent.com/arkadiyt/bounty-targets-data/main/data/intigriti_data.json"
+  },
+  {
+    name: "YesWeHack",
+    url: "https://raw.githubusercontent.com/arkadiyt/bounty-targets-data/main/data/yeswehack_data.json"
+  }
 ];
 
 let allPrograms = [];
 
 Promise.all(
-  jsonFiles.map(file =>
-    fetch(file)
+  sources.map(source =>
+    fetch(source.url)
       .then(res => {
-        if (!res.ok) throw new Error(`Failed to load ${file}`);
+        if (!res.ok) throw new Error(`Failed to load ${source.url}`);
         return res.json();
       })
+      .then(data => data.map(prog => ({...prog, _source: source.name})))
       .catch(e => {
         console.warn(e);
         return [];
@@ -44,18 +57,21 @@ function searchPrograms() {
   }
 
   matches.forEach(program => {
-    const scopeUrls = (program.targets?.in_scope || [])
-      .map(t => t.asset_identifier)
-      .join('<br>');
-
+    // Get all in-scope URLs/domains
+    let scopeUrls = [];
+    if (program.targets && Array.isArray(program.targets.in_scope)) {
+      scopeUrls = program.targets.in_scope
+        .map(t => t.asset_identifier)
+        .filter(Boolean);
+    }
     const pays = program.offers_bounties ? 'Yes' : 'No';
 
     const html = `
       <div class="program">
         <h3>${program.name}</h3>
-        <p><strong>Platform:</strong> ${program.handle || 'N/A'}</p>
+        <p><strong>Source:</strong> ${program._source}</p>
         <p><strong>Offers Bounty:</strong> ${pays}</p>
-        <p><strong>In-Scope Targets (Domains/URLs):</strong><br>${scopeUrls || 'None listed'}</p>
+        <p><strong>In-Scope Targets (Domains/URLs):</strong><br>${scopeUrls.length > 0 ? scopeUrls.join('<br>') : 'None listed'}</p>
         ${program.website ? `<p><strong>Website:</strong> <a href="${program.website}" target="_blank">${program.website}</a></p>` : ''}
       </div>
     `;
